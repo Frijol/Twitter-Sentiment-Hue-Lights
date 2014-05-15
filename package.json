@@ -1,0 +1,25 @@
+{
+  "name": "dangling-string",
+  "version": "0.0.0",
+  "description": "A recreation of Mark Weiser's classic dangling string, hooked up to Twitter traffic.",
+  "keywords": ["twitter"],
+  "bugs": {
+    "url": "https://github.com/Frijol/Dangling-String/issues"
+  },
+  "author": "Kelsey Breseman <kelsey@technical.io> (http://ifoundthemeaningoflife.com)",
+  "contributors": [],
+  "main": "",
+  "directories": {},
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Frijol/Dangling-String.git"
+  },
+  "dependencies": {
+    "node-twitter": "*",
+    "sentiment": "*"
+  },
+  "engines": {
+    "node": ">=0.6.x"
+  },
+  "licenses": [{"type": "BSD 3-Clause License", "url": "http://www.opensource.org/licenses/BSD-3-Clause"}]
+}
