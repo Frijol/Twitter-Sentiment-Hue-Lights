@@ -1,40 +1,30 @@
-//********************** Setup **********************//
 // Node packages
-var sentiment = require('sentiment');
+var Lights = require('./hue.js').Lights;
+var lights = new Lights();
 
-var lights = require('./hue.js').Lights;
 var Twitter = require('./twitter.js').Twitter;
 var twitter = new Twitter();
 
-//********************** Action **********************//
-getSentiment('#Tessel', function (err, res) {
-  if (err) {
-    console.log(err);
-  }
-  console.log(res);
-});
+var Sentiment = require('./sentiment.js').Sentiment;
+var sentiment = new Sentiment();
 
-// Gets the last 15 tweets, averages those with sentiment values for a score between -5 and 5
-function getSentiment (searchTerm, callback) {
-  twitter.getTweets(searchTerm, function (err, res) {
-    if (err) {
-      callback(err);
+// For my reference
+var red = 65535;
+var green = 25500;
+var blue = 46920;
+
+// Start up lights neutral
+lights.turnOn(function () {
+  lights.setSat(0);
+
+  // Get the sentiment from Twitter
+  sentiment.avgSentiment('#Tessel', function (err, reaction) {
+    if (reaction < 0) {
+      lights.setHue(red);
+      lights.setSat(reaction * -51); // Scale sentiment to full range of saturation
     } else {
-      var totalScore = 0;
-      var totalCount = 0;
-      for (var i in res) {
-        var tweet = res[i];
-        var thisSentiment = sentiment(tweet.text);
-        if (thisSentiment.words.length > 0) {
-          totalScore += parseFloat(thisSentiment.score);
-          totalCount += 1;
-        }
-      }
-      var avgScore = totalScore/totalCount;
-      if (isNaN(avgScore)) {
-        avgScore = 0;
-      }
-      callback(null, avgScore);
+      lights.setHue(green);
+      lights.setSat(reaction * 51); // Scale sentiment to full range of saturation
     }
   });
-}
+});

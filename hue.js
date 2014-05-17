@@ -14,29 +14,42 @@ var secrets = require('./secrets.js').hue;
 var hostname = secrets.hostname;
 var username = secrets.username;
 
-// For my reference
-var red = 65535;
-var green = 25500;
-var blue = 46920;
-
 // Set me up to communicate
 var hue = new HueApi(hostname, username);
 
 function Lights () {}
 
-Lights.prototype.turnOn = function () {
+Lights.prototype.turnOn = function (callback) {
   hue.setLightState(1, {"on": true});
   hue.setLightState(2, {"on": true});
+  if (callback) {
+    callback();
+  }
 };
 
-Lights.prototype.turnOff = function () {
+Lights.prototype.turnOff = function (callback) {
   hue.setLightState(1, {"on": false});
   hue.setLightState(2, {"on": false});
+  if (callback) {
+    callback();
+  }
 };
 
-Lights.prototype.setColor = function (color) {
-  hue.setLightState(1, {"hue" : color, "sat": 255});
-  hue.setLightState(2, {"hue" : color, "sat": 255});
+Lights.prototype.setHue = function (color, callback) {
+  hue.setLightState(1, {"hue" : color});
+  hue.setLightState(2, {"hue" : color});
+  if (callback) {
+    callback();
+  }
+};
+
+// Saturation between 0 and 255
+Lights.prototype.setSat = function (saturation, callback) {
+  hue.setLightState(1, {"sat": saturation});
+  hue.setLightState(2, {"sat": saturation});
+  if (callback) {
+    callback();
+  }
 };
 
 exports.Lights = Lights;
