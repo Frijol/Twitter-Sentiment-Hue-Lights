@@ -1,33 +1,33 @@
 var sentiment = require('sentiment');
 
-var Twitter = require('./twitter.js').Twitter;
-var twitter = new Twitter();
-
 function Sentiment () {}
 
-// Gets the last 15 tweets, averages those with sentiment values for a score between -5 and 5
-Sentiment.prototype.avgSentiment = function (searchTerm, callback) {
-  twitter.getTweets(searchTerm, function (err, res) {
-    if (err) {
-      callback(err);
-    } else {
-      var totalScore = 0;
-      var totalCount = 0;
-      for (var i in res) {
-        var tweet = res[i];
-        var thisSentiment = sentiment(tweet.text);
-        if (thisSentiment.words.length > 0) {
-          totalScore += parseFloat(thisSentiment.score);
-          totalCount += 1;
-        }
-      }
-      var avgScore = totalScore/totalCount;
-      if (isNaN(avgScore)) {
-        avgScore = 0;
-      }
-      callback(null, avgScore);
-    }
-  });
+// Takes the text of a single tweet as a string, returns sentiment score as a float
+Sentiment.prototype.oneSentiment = function (tweet, callback) {
+  var reaction = sentiment(tweet).score;
+  
+  // Contain enthusiasm
+  if (reaction > 5) {
+    reaction = 5;
+  }
+  if (reaction < -5) {
+    reaction = -5;
+  }
+
+  callback(reaction);
+};
+
+// Takes an array of strings of tweet text, returns average sentiment score as a float
+Sentiment.prototype.avgSentiment = function (tweets, callback) {
+  var self = this;
+  var total = 0;
+  for (var i in tweets) {
+    self.oneSentiment(tweets[i], function(res) {
+      total += res;
+    });
+  }
+  var avg = total/tweets.length;
+  callback(avg);
 };
 
 exports.Sentiment = Sentiment;

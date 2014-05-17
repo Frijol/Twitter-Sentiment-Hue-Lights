@@ -14,6 +14,11 @@ var secrets = require('./secrets.js').hue;
 var hostname = secrets.hostname;
 var username = secrets.username;
 
+// For my reference
+var red = 65535;
+var green = 25500;
+var blue = 46920;
+
 // Set me up to communicate
 var hue = new HueApi(hostname, username);
 
@@ -35,18 +40,30 @@ Lights.prototype.turnOff = function (callback) {
   }
 };
 
-Lights.prototype.setHue = function (color, callback) {
-  hue.setLightState(1, {"hue" : color});
-  hue.setLightState(2, {"hue" : color});
+Lights.prototype.setHue = function (whichLight, color, callback) {
+  hue.setLightState(whichLight, {"hue" : color});
   if (callback) {
     callback();
   }
 };
 
 // Saturation between 0 and 255
-Lights.prototype.setSat = function (saturation, callback) {
-  hue.setLightState(1, {"sat": saturation});
-  hue.setLightState(2, {"sat": saturation});
+Lights.prototype.setSat = function (whichLight, saturation, callback) {
+  hue.setLightState(whichLight, {"sat": saturation});
+  if (callback) {
+    callback();
+  }
+};
+
+Lights.prototype.setBySentiment = function (whichLight, reaction, callback) {
+  var self = this;
+  if (reaction < 0) {
+    self.setHue(whichLight, red); // Boo, hiss
+    self.setSat(whichLight, reaction * -51); // Scale sentiment to full range of saturation
+  } else {
+    self.setHue(whichLight, green); // Oh yeah
+    self.setSat(whichLight, reaction * 51); // Scale sentiment to full range of saturation
+  }
   if (callback) {
     callback();
   }
