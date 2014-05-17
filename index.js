@@ -9,7 +9,7 @@ var sentiment = new Sentiment();
 
 // Application-specific
 var twecrets = require('./secrets.js').twecrets;
-var num = 3; // How many tweets to average
+var num = 5; // How many tweets to average
 var avgTweets = [];
 
 
