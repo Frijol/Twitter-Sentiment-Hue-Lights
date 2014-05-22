@@ -1,5 +1,5 @@
 // Node packages
-var Twitter = require('node-twitter'); // You have to install this from github. The npm package is tragically outdated.
+var Twitter = require('node-twitter'); // You have to install this from github (https://github.com/istrategylabs/node-twitter.git). The npm package is tragically outdated.
 
 var Lights = require('./hue.js').Lights;
 var lights = new Lights();
@@ -28,7 +28,7 @@ lights.turnOn(function () {
   );
 
   // Start streaming anything containing these strings
-  twitterStreamClient.start(['#tessel', 'tessel.io', '@technicalhumans', 'technical.io', 'tessel']);
+  twitterStreamClient.start(['#tessel', 'tessel.io', '@technicalhumans', 'technical.io', 'tessel', 'krobotbackdoor', '@selkeymoonbeam']);
 
   // When we get something
   twitterStreamClient.on('tweet', function(tweet) {
